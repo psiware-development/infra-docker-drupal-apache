@@ -1,0 +1,26 @@
+version: '3.1'
+services:
+  drupal:
+    image: drupal:9-php7.4-apache
+    ports:
+      - 1180:80
+    volumes:
+      - ./lms3:/var/www/html
+      - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
+      #- ./public_files:/var/www/html/sites/default/files
+    restart: always
+
+  mariadb:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: $MYSQL_DATABASE
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+#    ports:
+#      - "${MYSQL_PORT}:3306"
+    volumes:
+     - ./db-data:/var/lib/mysql
+     #- ./database-backups:/backups
+     - ./lms3.sql:/docker-entrypoint-initdb.d/dump.sql
